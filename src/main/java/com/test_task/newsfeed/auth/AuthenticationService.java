@@ -35,6 +35,7 @@ public class AuthenticationService {
         String password = request.getPassword().trim();
         String name = request.getName().trim();
         String surname = request.getSurname().trim();
+        String avatarLink = (request.getAvatarLink() == null) ? null : request.getAvatarLink().trim();
         String middleName = (request.getMiddleName() == null) ? null : request.getMiddleName().trim();
         if (userRepository.existsByLogin(login)) {
             throw new UserAlreadyExists(String.format("User with login %s already exists", request.getLogin()));
@@ -47,6 +48,7 @@ public class AuthenticationService {
                 .name(name)
                 .surname(surname)
                 .middleName(middleName)
+                .avatarLink(avatarLink)
                 .password(passwordEncoder.encode(password))
                 .build();
         var savedUser = userRepository.save(user);

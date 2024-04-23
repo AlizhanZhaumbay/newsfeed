@@ -33,6 +33,7 @@ public class User extends AbstractEntity implements UserDetails {
     @Column(length = 20)
     String middleName;
 
+    String avatarLink;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
