@@ -1,14 +1,12 @@
 package com.test_task.newsfeed.validator;
 
-import com.test_task.newsfeed.exception.IncorrectPasswordException;
-import com.test_task.newsfeed.exception.InvalidRequestBodyException;
+import com.test_task.newsfeed.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.security.InvalidParameterException;
 import java.util.Set;
 
 @RestControllerAdvice
@@ -26,6 +24,16 @@ public class NewsfeedExceptionHandler {
 
     @ExceptionHandler({IncorrectPasswordException.class})
     public ResponseEntity<String> invalidParameterException(IncorrectPasswordException exception){
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler({UserAlreadyExists.class})
+    public ResponseEntity<String> userAlreadyExists(UserAlreadyExists exception){
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler({UserNotFoundException.class, NewsNotFoundException.class})
+    public ResponseEntity<String> notFoundException(RuntimeException exception){
         return ResponseEntity.badRequest().body(exception.getMessage());
     }
 }

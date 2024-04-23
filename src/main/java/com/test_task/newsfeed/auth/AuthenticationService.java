@@ -31,18 +31,23 @@ public class AuthenticationService {
 
     public AuthenticationResponse register(RegisterRequest request) {
         objectValidator.validate(request);
-        if (userRepository.existsByLogin(request.getLogin())) {
+        String login = request.getLogin().trim();
+        String password = request.getPassword().trim();
+        String name = request.getName().trim();
+        String surname = request.getSurname().trim();
+        String middleName = (request.getMiddleName() == null) ? null : request.getMiddleName().trim();
+        if (userRepository.existsByLogin(login)) {
             throw new UserAlreadyExists(String.format("User with login %s already exists", request.getLogin()));
         }
-        if(!request.getConfirmationPassword().equals(request.getPassword())){
+        if(!request.getConfirmationPassword().trim().equals(request.getPassword().trim())){
             throw new IncorrectPasswordException("Confirmation password should be the same as password");
         }
         var user = User.builder()
-                .login(request.getLogin())
-                .name(request.getName())
-                .surname(request.getSurname())
-                .middleName(request.getMiddleName())
-                .password(passwordEncoder.encode(request.getPassword()))
+                .login(login)
+                .name(name)
+                .surname(surname)
+                .middleName(middleName)
+                .password(passwordEncoder.encode(password))
                 .build();
         var savedUser = userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

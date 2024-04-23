@@ -27,10 +27,10 @@ public class NewsService {
         User currentUser = (User)
                 SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         News news = newsRepository.save(News.builder()
-                        .product(newsRequest.getProduct())
-                        .destination(newsRequest.getDestination())
+                        .product(newsRequest.getProduct().trim())
+                        .destination(newsRequest.getDestination().trim())
                         .price(newsRequest.getPrice())
-                        .phoneNumber(newsRequest.getPhoneNumber())
+                        .phoneNumber(newsRequest.getPhoneNumber().trim())
                         .userLogin(currentUser.getLogin())
                 .build());
         return news.getId();
