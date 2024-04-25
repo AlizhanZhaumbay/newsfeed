@@ -3,7 +3,6 @@ Server Access Link
 To access the server, please use the following link:
 
 Server Access Link (Should return json) : https://api.render.com/deploy/srv-cojq5kgcmk4c73c10n9g?key=wUmLPEJm9dg
-And wait for 2-3 minutes...
 ________________________________________________________________________________________________________________________
 ENDPOINTS
 
