@@ -8,7 +8,7 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class NewsCreationRequest {
-    @NotNull(message = "Product must not be null")
+    @NotEmpty(message = "Product must not be null or empty")
     @Size(min = 2, max = 50, message = "Product name must be between 2 and 50 characters")
     @NotBlank(message = "Product name must not be blank")
     private String product;
@@ -20,12 +20,12 @@ public class NewsCreationRequest {
 
     @Size(min = 2, max = 100, message = "Destination must be between 2 and 100 characters")
     @NotBlank(message = "Destination must not be blank")
-    @NotNull(message = "Destination must not be null")
+    @NotEmpty(message = "Destination must not be null or empty")
     private String destination;
 
     @Pattern(regexp = "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$",
             message = "Invalid phone number format. Please provide a 10-digit phone number.")
     @JsonProperty("phone_number")
-    @NotNull(message = "Phone Number must not be null")
+    @NotEmpty(message = "Phone Number must not be null or empty")
     private String phoneNumber;
 }

@@ -18,5 +18,3 @@ application:
       expiration: 36000000 # an hour
       refresh-token:
         expiration: 86400000000 # a day
-
-

@@ -1,4 +1,4 @@
-package com.test_task.newsfeed.auth;
+package com.test_task.newsfeed.config;
 
 import com.test_task.newsfeed.exception.UserNotFoundException;
 import com.test_task.newsfeed.repo.UserRepository;

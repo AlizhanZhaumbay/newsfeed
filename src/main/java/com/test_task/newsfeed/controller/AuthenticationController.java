@@ -1,29 +1,30 @@
 package com.test_task.newsfeed.controller;
 
-import com.test_task.newsfeed.dto.NewsDto;
-import com.test_task.newsfeed.network.NewsCreationRequest;
-import com.test_task.newsfeed.service.NewsService;
+import com.test_task.newsfeed.auth.AuthenticationService;
+import com.test_task.newsfeed.network.AuthenticationResponse;
+import com.test_task.newsfeed.network.LoginRequest;
+import com.test_task.newsfeed.network.RegisterRequest;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@Tag(name = "News")
 @RestController
-@RequestMapping("/news")
+@RequestMapping(value = "/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authentication",
+        description = "A controller for processing authentication requests")
 @SecurityRequirement(name = "Bearer Authentication")
-public class NewsController {
-    private final NewsService newsService;
+public class AuthenticationController {
 
+    private final AuthenticationService authenticationService;
 
-    @Operation(description = "Endpoint for creating a new piece of news",
+    @Operation(description = "Register a new user",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -38,12 +39,14 @@ public class NewsController {
                             responseCode = "400"
                     )
             })
-    @PostMapping
-    public ResponseEntity<Long> createNews(@RequestBody NewsCreationRequest newsRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(newsService.saveNews(newsRequest));
+    @PostMapping("/register")
+    public ResponseEntity<AuthenticationResponse> register(
+            @RequestBody RegisterRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.register(request));
     }
 
-    @Operation(description = "Endpoint for fetching all news items",
+    @Operation(description = "Sign in and authenticate user",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -52,15 +55,21 @@ public class NewsController {
                     @ApiResponse(
                             description = "Not authorized",
                             responseCode = "403"
+                    ),
+                    @ApiResponse(
+                            description = "Invalid request body",
+                            responseCode = "400"
                     )
             }
     )
-    @GetMapping
-    public ResponseEntity<List<NewsDto>> fetchNews() {
-        return ResponseEntity.ok(newsService.getAllNews());
+    @PostMapping("/login")
+    public ResponseEntity<AuthenticationResponse> authenticate(
+            @RequestBody LoginRequest loginRequest
+    ) {
+        return ResponseEntity.ok(authenticationService.authenticate(loginRequest));
     }
 
-    @Operation(description = "Endpoint for fetching a specific news item by its ID",
+    @Operation(description = "Refresh access token",
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -69,11 +78,12 @@ public class NewsController {
                     @ApiResponse(
                             description = "Not authorized",
                             responseCode = "403"
-                    )
-            }
-    )
-    @GetMapping("/{id}")
-    public ResponseEntity<NewsDto> fetchOneNew(@PathVariable("id") Long id) {
-        return ResponseEntity.ok(newsService.getNewsById(id));
+                    ),
+            })
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(
+            HttpServletRequest request
+    ) {
+        return ResponseEntity.ok(authenticationService.refreshToken(request));
     }
 }
